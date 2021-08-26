@@ -13,6 +13,22 @@ app.get("/",(req,res)=> {
     res.sendFile(__dirname+"/index.html");
 })
 
+
+
+// // This function execute when client send the request. 
+// io.on("connection",(socket)=> {
+//     console.log("Client connected");
+//     // to get the message from a client 
+//     socket.on("obj",({name,message})=> {
+//         console.log({name,message});       // we are display message in console 
+//                                 // can we store this message 
+//                                 // in databaes using 
+//                                 // mongodb or mongoose module 
+//     })
+// })
+
+
+
 //load the module and create the reference.
 let obj=require("mongodb").MongoClient;
 let url="mongodb://localhost:27017";
@@ -21,30 +37,35 @@ obj.connect(url,(err,client)=>
 { if(!err){
 
 
-    let db=client.db("mern"); //connect to database
+   
 
 // This function execute when client send the request. 
 io.on("connection",(socket)=> {
     console.log("Client connected");
     // to get the message from a client 
-    socket.on("obj",(msg)=> {
-        console.log(msg);       // we are display message in console 
+    
+    socket.on("obj",({name,message})=> { let db=client.db("mern"); //connect to database
+        console.log({name,message});       // we are display message in console 
                                 // can we store this message 
                                 // in databaes using 
                                 // mongodb or mongoose module 
-                                let message = {_id : 101, text : msg };                         
+                                let row = {username : name, text : message };                         
     
 
 
 
 
-db.collection("Chatbox").insertOne(message,(err,result)=>{
+db.collection("Chatbox").insertOne(row,(err,result)=>{
     if(!err){
         console.log(result);
     }else{
         console.log(err); 
     }
-    client.close();})})
+   // client.close();
+})
+
+
+})
 })
       
     
@@ -55,6 +76,7 @@ db.collection("Chatbox").insertOne(message,(err,result)=>{
         console.log(err);
     } 
 })
+
 
 
 

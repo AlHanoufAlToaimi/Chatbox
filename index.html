@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Document</title>
 
     <!-- Conneting socket library-->
@@ -14,10 +15,20 @@
     // to send the message to server 
     //socket.emit("obj","Hello Server I am SoketIO.Client Hanno");
     send = ()=>{
-                let data = document.getElementById("msg").value;
+      let name = document.getElementById("username").value;
+               let message = document.getElementById("msg").value;
+
               //  ws.send(data);
                // document.getElementById("msg").value="";
-               socket.emit("obj",data);
+               //socket.emit("obj",message);
+              socket.emit('obj', {name,message});
+              event.preventDefault();
+
+ let chatmsg = document.getElementById('messages');
+ chatmsg.innerHTML += "<b>"+ name+ ': '+"</b>"+message+"<br/>";
+
+
+ document.getElementById('msg').value='';
             }
 
 
@@ -39,17 +50,11 @@
       width: 85vw;
       margin: 0 auto;
     }
-    #chatContainer {
-      height: 75vh;
-      border: 1px solid #6212e4;
-      border-radius: 10px; 
+    .card-block {
+      height:300px;
       overflow: scroll;
     }
-    #messageForm {
-      width:100%;
-      position: absolute;
-      bottom: 10px;
-    }
+  
     .input {
       margin: auto;
       padding: 0.5rem;
@@ -64,12 +69,11 @@
     }
 
     .btn {
-      padding: 0.5rem;
-      background-color: #5fcefa;
-      border: 1px solid #06b8ff;
-      border-radius: 5px;
+      background-color:rgb(73, 170, 86);
+      margin-top: .5rem;
       color: #fff;
-      font-weight: 600;
+      position: fixed;
+     
     }
     .center {
       text-align: center;
@@ -79,15 +83,7 @@
       border-color: #fa7962 !important;
     }
     /* default message styling for server notifications */
-    .message {
-      background-color: rgb(223, 174, 230);
-      color: #333;
-      font-size: 1.2rem;
-      text-align: center;
-      border-radius: 5px;
-      padding: 0.5rem;
-      margin-top: 1rem;
-    }
+ 
     /* change colors and alignment for self and others messages */
     .self-message {
       background-color: #ccffcc;
@@ -96,39 +92,38 @@
     .others-message {
       background-color: aqua;
       text-align: left;
-    }
+    }   
+
   </style>
 
 
 </head>
 <body>
-   
-    <div className="container-fluid" id="app">
-     <h2>Welcome To Chatbox Application</h2>
-    <!-- Chat messages will be appended inside this container -->
-   
-   
-   
-  <div id="chatContainer"></div>
-<br/>
 
-    
-    <form id="messageForm">
-        <input class="input center" type="text" id="msg" placeholder="Type your message here..."/>
-        <button class="btn" type="submit" id="sendBtn" onclick="send()">Send!</button>
-      </form>
+  <div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 col-sm-12">
+            <h1 class="text-center">
+              Chatbox Application 
+                <!-- <button id="clear" class="btn btn-danger">Clear</button> -->
+            </h1>
+            <div id="status"></div>
+            <div id="chat">
+                <input type="text" id="username" class="form-control" placeholder="Enter name...">
+                <br>
+                <div class="card">
+                    <div id="messages" class="card-block">
 
-
-<!-- <textarea id="msg">
-
-    </textarea><br/>
-    <input type="button" value="Send Message" onclick="send()"/>
-    <br/> -->
-    <div id="info">
-
+                    </div>
+                </div>
+                <br/>
+              
+                <textarea id="msg" class="form-control" placeholder="Enter message..."></textarea>
+                <button class="btn" type="submit" id="sendBtn" onclick="send()">Send!</button>
+              
+            </div>
+        </div>
     </div>
-    
-   </div>
-       
+</div>
 </body>
 </html>
