@@ -1,44 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <title>Document</title>
-
-    <!-- Conneting socket library-->
+    <title>Welcome to Chatbox Application</title>
     <script src="/socket.io/socket.io.js"></script>
 
-    <script type="text/JavaScript">
+    <!-- Conneting socket library-->
+<script type="text/JavaScript">
+    
     let socket = io();
-  
-    send = ()=>{
-    let name = document.getElementById("username").value;
-    let message = document.getElementById("msg").value;
-  
-    if (name==''){
-      alert("Enter your name please");
-    }else
-    {
-      if (message!=''){
-         
-        socket.emit('obj', {name,message});
-        event.preventDefault();
-          
-        let chatmsg = document.getElementById('messages');
-        chatmsg.innerHTML +=  "<span class='self-message'>" + "<b>"+ name+ ': '+"</b>"+message+"</span>"+"<br/>";
-       
-        document.getElementById('msg').value='';
-        }
-      }
-    }
-    </script>
+    
+    setUsername = ()=>{
+      socket.emit("setUsername", document.getElementById("name").value);
+      };
+
+      var user;
+      socket.on('userExists', function(data){
+         document.getElementById('error-userExists').innerHTML = data;
+      });
+
+      socket.on('userSet', function(data){
+        user = data.username;
+        document.body.innerHTML = '<div class="container">\
+          <div class="row">\
+            <div class="col-md-6 offset-md-3 col-sm-12">\
+              <div class="header">\
+                Chatbox Application \
+                </div>\
+                <div id="chat">\
+                  <br>\
+                  <div class="card">\
+                    <div id="card-block" class="card-block">\
+                      </div>\
+                      </div>\
+                      <br/>\
+                      <textarea id="message" class="form-control" placeholder="Enter message..."></textarea>\
+                      <button class="btn" type="submit" id="sendBtn" onclick="send()">Send!</button> \
+                      </div>\
+                      </div>\
+                      </div>\
+                      </div>';
+                    });
+                    
+                    send = ()=>{
+                      var msg = document.getElementById('message').value;
+                      if(msg){
+                        socket.emit('msg', {message: msg, user: user});
+                        document.getElementById('message').value='';
+                      }
+                    }
+                    
+                    socket.on('newmsg', function(data){
+                      if(user){
+                        document.getElementById('card-block').innerHTML +="<span class='chat-message'>"+"<b>" + data.user + "</b>: " + data.message + "</span>"+"<br/>";
+                      }
+                    })
+</script>
 
 <!-- Stylesheet -->
 <style>
-    body {
+  
+  body {
       font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
       box-sizing: border-box;
       background-color:whitesmoke;
@@ -74,35 +97,29 @@
       position: fixed; 
     }
 
-    .self-message {
-      background-color: rgb(214, 213, 213);
-      text-align: right;
+    .chat-message {
+      background-color: rgb(240, 240, 240);
     }
 
-  </style>
+</style>
 </head>
 
 <body>
+  
   <div class="container">
     <div class="row">
-        <div class="col-md-6 offset-md-3 col-sm-12">
-            <div class="header">
-              Chatbox Application 
-            </div>
-            <div id="chat">
-                <input type="text" id="username" class="form-control" placeholder="Enter name...">
-                <br>
-                <div class="card">
-                    <div id="messages" class="card-block">
-                    </div>
-                </div>
-                <br/>
-                <textarea id="msg" class="form-control" placeholder="Enter message..."></textarea>
-                <button class="btn" type="submit" id="sendBtn" onclick="send()">Send!</button> 
-            </div>
+      <div class="col-md-6 offset-md-3 col-sm-12">
+        <div class="header">
+          Chatbox Application
         </div>
+        <div id="chat">
+          <div id="error-userExists"></div>
+          <input id="name" type="text" name="name" class="form-control" value="" placeholder="Enter your name...">
+          <button class="btn" type="submit" id="sendBtn" onclick="setUsername()">Start chatting!</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
 </body>
 </html>
