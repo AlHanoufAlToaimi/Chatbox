@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,49 +13,51 @@
 
     <script type="text/JavaScript">
     let socket = io();
-    // to send the message to server 
-    //socket.emit("obj","Hello Server I am SoketIO.Client Hanno");
+  
     send = ()=>{
-      let name = document.getElementById("username").value;
-               let message = document.getElementById("msg").value;
-
-              //  ws.send(data);
-               // document.getElementById("msg").value="";
-               //socket.emit("obj",message);
-              socket.emit('obj', {name,message});
-              event.preventDefault();
-
- let chatmsg = document.getElementById('messages');
- chatmsg.innerHTML += "<b>"+ name+ ': '+"</b>"+message+"<br/>";
-
-
- document.getElementById('msg').value='';
-            }
-
-
-
-    // function send() {
-    //     // receive the value of textfield or textarea 
-    //     // using dom with getElementById()
-    //     // socket.emit("obj",value);    
-    // }
+    let name = document.getElementById("username").value;
+    let message = document.getElementById("msg").value;
+  
+    if (name==''){
+      alert("Enter your name please");
+    }else
+    {
+      if (message!=''){
+         
+        socket.emit('obj', {name,message});
+        event.preventDefault();
+          
+        let chatmsg = document.getElementById('messages');
+        chatmsg.innerHTML +=  "<span class='self-message'>" + "<b>"+ name+ ': '+"</b>"+message+"</span>"+"<br/>";
+       
+        document.getElementById('msg').value='';
+        }
+      }
+    }
     </script>
 
 <!-- Stylesheet -->
 <style>
     body {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
       box-sizing: border-box;
+      background-color:whitesmoke;
     }
-    #app {
-      width: 85vw;
-      margin: 0 auto;
-    }
-    .card-block {
+    
+    .header {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 25px;
+    background-color:rgb(39, 53, 133);
+    color:white;
+  }
+
+  .card-block {
       height:300px;
       overflow: scroll;
     }
-  
+    
     .input {
       margin: auto;
       padding: 0.5rem;
@@ -63,67 +66,43 @@
       border: 1px solid #c2c2c2;
       border-radius: 2px;
     }
-    .input:active,
-    .input:focus {
-      border-color: #9de3ff;
-    }
-
+    
     .btn {
       background-color:rgb(73, 170, 86);
       margin-top: .5rem;
       color: #fff;
-      position: fixed;
-     
+      position: fixed; 
     }
-    .center {
-      text-align: center;
-      margin: 0 auto;
-    }
-    .error {
-      border-color: #fa7962 !important;
-    }
-    /* default message styling for server notifications */
- 
-    /* change colors and alignment for self and others messages */
+
     .self-message {
-      background-color: #ccffcc;
+      background-color: rgb(214, 213, 213);
       text-align: right;
     }
-    .others-message {
-      background-color: aqua;
-      text-align: left;
-    }   
 
   </style>
-
-
 </head>
-<body>
 
+<body>
   <div class="container">
     <div class="row">
         <div class="col-md-6 offset-md-3 col-sm-12">
-            <h1 class="text-center">
+            <div class="header">
               Chatbox Application 
-                <!-- <button id="clear" class="btn btn-danger">Clear</button> -->
-            </h1>
-            <div id="status"></div>
+            </div>
             <div id="chat">
                 <input type="text" id="username" class="form-control" placeholder="Enter name...">
                 <br>
                 <div class="card">
                     <div id="messages" class="card-block">
-
                     </div>
                 </div>
                 <br/>
-              
                 <textarea id="msg" class="form-control" placeholder="Enter message..."></textarea>
-                <button class="btn" type="submit" id="sendBtn" onclick="send()">Send!</button>
-              
+                <button class="btn" type="submit" id="sendBtn" onclick="send()">Send!</button> 
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>
